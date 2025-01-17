@@ -1,0 +1,28 @@
+/* directives from tailwind css to use his classes */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Target all scrollbars */
+::-webkit-scrollbar {
+  width: 4px; /* Thinner scrollbar */
+  height: 4px; /* For horizontal scrollbars */
+  display: none;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #aaa; /* Customize the color of the scrollbar thumb */
+  border-radius: 50; /* Optional: Rounded corners */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* Customize the scrollbar track */
+  /* border: solid 1px #785c5c; */
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #cccccc transparent;
+  box-sizing: border-box;
+}
