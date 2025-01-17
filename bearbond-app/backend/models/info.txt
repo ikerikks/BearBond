@@ -1,0 +1,4 @@
+Model directory
+What are models ? 
+- Abstractions of the database schema, how data is represented, accessed, and manipulated
+- Structure of the database

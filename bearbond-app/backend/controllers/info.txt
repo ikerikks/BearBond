@@ -1,0 +1,5 @@
+Controllers directory.
+What are controllers ?
+- handle the logic and interaction of the app.
+- use models to retrieve, manipulate, and save data to the database.
+- act as a bridge between the user interface and the models/database.
