@@ -24,7 +24,7 @@ const protectRoute = async (req, res, nextFunc) => {
     req.user = user // add this user field into the request object.
     nextFunc(); // call the next function
 
-  } catch (error) {
+  } catch (err) {
     console.log('Error in the protectRout process (middleware):', err);
     res.status(500).json =({error: 'Server error'});
   }

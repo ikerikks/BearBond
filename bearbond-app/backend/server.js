@@ -65,10 +65,10 @@ io.on('connection', (socket) => {
   socket.on('startConversation', async (data, callback) => {
     try {
       const conversation = await startConversation(data);
-      callback({success: true, conversation});
+      callback({success: true, data:conversation});
     } catch (err) {
-      console.log('error in the start conversation', err);
-      callback({success: false, errror: err.message});
+      console.log(err);
+      callback({success: false, error: err.message});
     }
   });
 
@@ -77,26 +77,28 @@ io.on('connection', (socket) => {
       const conversations = await getUserConversations(data.userId);
       callback({success: true, data:conversations});
     } catch (err) {
-      console.error('error in getting the conversations:', err);
+      console.error(err);
       callback({success: false, error: err.message});
     }
   });
 
-  socket.on('sendMessage', async (data) => {
+  socket.on('sendMessage', async (data, callback) => {
     try {
       const message = await sendMessage(data);
       io.to(data.conversationId).emit('newMessage', message);
+      callback({success: true, data:message});
     } catch (err) {
-      console.error('Error in sendMessage:', err);
+      console.error(err);
+      callback({success: false, error: err.message});
     }
   });
 
-  socket.on('getMessages', async (conversationId, callback) => {
+  socket.on('getMessages', async (data, callback) => {
     try {
-      const messages = await getMessages(conversationId);
-      callback({ success: true, messages });
+      const messages = await getMessages(data.conversationId);
+      callback({ success: true, data:messages });
     } catch (err) {
-      console.error('Error in getMessages:', err);
+      console.error(err);
       callback({success: false, error: err.message});
     }
   });

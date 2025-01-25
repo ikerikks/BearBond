@@ -7,8 +7,9 @@ const getUserProfile = async (req, res) => {
   const { username } = req.params; //params are in the url path
   
   try {
-    const user = await User.findOne({userName: username}).select('-password');
-
+    const user = await User.findOne({userName: username})
+    .select('-password')
+    
     if (!user) {
       return res.status(404).json({error: 'User not found'});
     }
@@ -84,14 +85,12 @@ const updateUserProfile = async (req, res) => {
     }
     
     if (userName) {
-      const userNameAlreadyTaken = await User.findOne({userName});
+      const userExists = await User.findOne({userName});
 
-      if (userNameAlreadyTaken) {
-        const {userName:taken} = userNameAlreadyTaken;
-        if (userName === taken) {
-          return res.status(400).json({error: 'It\'s your current username'})
+      if (userExists) {
+        if (userExists._id.toString() !== userId.toString()) {
+          return res.status(400).json({error: 'Username already taken'});
         }
-        return res.status(400).json({error: 'Username already taken'});
       }
 
       if (userName.includes(' ')) {
@@ -128,10 +127,13 @@ const updateUserProfile = async (req, res) => {
       user.fullName = fullName;
     }
 
-    user.bio = bio?.trim() ? bio : null;
-    user.link = link?.trim() ? link : null;
-    // user.profileImg = profileImg || user.profileImg; // can be optimized ?
-    // user.coverImg = coverImg || user.coverImg; // can be optimized ?
+    if (bio !== undefined) {
+      user.bio = bio?.trim() ? bio : null;
+    }
+
+    if (link !== undefined) {
+      user.link = link?.trim() ? link : null;
+    }
 
     await user.save();
     user.password = null;

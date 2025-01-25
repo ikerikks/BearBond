@@ -4,7 +4,7 @@ import User from '../models/user.model.js';
 import Notification from '../models/notification.model.js';
 
 
-const startConversation = async (userId, recipientId) => {
+const startConversation = async ({userId, recipientId}) => {
   try {
     let conversation = await Conversation.findOne({
       participants: { $all: [userId, recipientId] },
@@ -42,8 +42,8 @@ const getUserConversations = async (userId) => {
     .populate({
       path: 'conversations',
       populate: [
-        {path: 'participants', select: '-password'},
-        {path: 'lastMessage'},
+        { path: 'participants', select: '-password' },
+        { path: 'lastMessage', select: ''},
       ],
     });
 
@@ -53,10 +53,12 @@ const getUserConversations = async (userId) => {
   }
 }
 
-const sendMessage = async (req, res) => {
+const sendMessage = async ({
+  conversationId, 
+  senderId, 
+  text
+}) => {
   try {
-    const {conversationId, senderId, text} = req.body;
-
     const message = new Message({
       conversation: conversationId,
       sender: senderId,
@@ -69,9 +71,9 @@ const sendMessage = async (req, res) => {
       lastMessage: message._id,
     });
 
-    return message;
+    return message.populate({path: 'sender', select: '-password'});
   } catch (err) {
-    throw new Error('error in the send message');
+    throw new Error('Error in the send message');
   }
 }
 
@@ -81,15 +83,14 @@ const getMessages = async (conversationId) => {
     .populate({
       path: 'messages',
       populate: [
-        {
-          path: 'sender', 
-          select: 'userName'
-        },
+        {path: 'sender', select: ['userName', 'profileImg']},
       ],
-    });
+    })
+    .populate({path: 'participants', select: '-password'});
+
     return messages;
   } catch (err) {
-    throw new Error('error in get messages');
+    throw new Error('Error in get messages');
   }
 }
 

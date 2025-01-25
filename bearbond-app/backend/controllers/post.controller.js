@@ -226,8 +226,8 @@ const getAllPosts = async (req, res) => {
 
 const getUserPosts = async (req, res) => {
   try {
-    const userName = req.params.username;
-    const user = await User.findOne({userName});
+    const {id:userId} = req.params;
+    const user = await User.findById(userId);
     
     if (!user) {
       return res.status(404).json({error: 'User not found'});
@@ -237,6 +237,10 @@ const getUserPosts = async (req, res) => {
     .sort({createdAt: -1})
     .populate({path: 'user', select: '-password'})
     .populate({path: 'comments.user', select: '-password'})
+
+    // if (userPosts.length) {
+    //   return
+    // }
 
     if (!userPosts) {
       return res.status(404).json({error: 'POSTS not found'});
