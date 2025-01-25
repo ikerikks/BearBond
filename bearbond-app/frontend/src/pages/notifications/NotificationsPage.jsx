@@ -6,14 +6,13 @@ import toast from "react-hot-toast";
 
 import { TbMessage2 } from "react-icons/tb";
 import { TbSend } from "react-icons/tb";
-import { RiBearSmileLine, RiBearSmileFill } from "react-icons/ri";
-import { HiReply } from "react-icons/hi";
+import { RiBearSmileFill } from "react-icons/ri";
 import { FaInfoCircle } from "react-icons/fa";
 import { FaTrashAlt } from "react-icons/fa";
-import { TiStarFullOutline } from "react-icons/ti";
 import { PiTrashBold } from "react-icons/pi";
 import { BsFillPatchCheckFill } from "react-icons/bs";
 import { BsFillPatchExclamationFill } from "react-icons/bs";
+import { MdOutlineMarkEmailUnread } from "react-icons/md";
 
 import NotificationsLoader from "../../components/loaders/UserLoader";
 import avatar from "../../assets/images/avatar.png";
@@ -22,8 +21,6 @@ const NotificationsPage = () => {
 
   const navigate = useNavigate()
   const queryClient = useQueryClient();
-  const {data:authUser} = useQuery({queryKey:['authUser']});
-
   const [notifUI, setNotifUI] = useState(null);
 
   const {data:notifications, isPending, isError, error} = useQuery({
@@ -133,8 +130,8 @@ const NotificationsPage = () => {
 
 
   return (
-    <div className="flex-[4_4_0] min-h-screen scrollbar-none overflow-y-auto border-x">
-      <header className="flex items-center justify-between px-3 pt-3 pb-4 sticky top-0 border-b bg-white/70 backdrop-blur-lg z-10">
+    <div className="flex-[4_4_0] h-screen scrollbar-none overflow-y-auto px-3">
+      <header className="flex items-center justify-between h-[56px] px-3 pt-3 pb-4 sticky top-0 bg-primary/5 backdrop-blur-lg z-10 rounded-2xl">
         <h1 className=" text-lg text-neutral font-bold">Notifications</h1>
         <button 
           className="btn btn-xs btn-primary text-base-100"
@@ -145,24 +142,24 @@ const NotificationsPage = () => {
         </button>
       </header>
       {isPending &&
-        <>
+        <div className="bg-base-100 rounded-2xl mt-5">
           <NotificationsLoader />
           <NotificationsLoader />
           <NotificationsLoader />
-        </>
+        </div>
       }
       {notifications?.length === 0 &&
       <p className="text-center text-secondary font-bold">No notifications yet</p>
       }
       {notifications?.length > 0 &&
-        <ul className="">
+        <ul className=" bg-base-100 mt-5 rounded-2xl">
           {notifications.map((notif) => (
             <li
               key={notif._id} 
               className="flex gap-2 md:gap-4 items-center border-b p-2 md:p-3 hover:bg-base-200 cursor-pointer"
               onClick={() =>{handleClickNotif(notif)}}
             >
-              <div className="flex gap-1">
+              <div className="flex">
                 <div className={`${!notif.read?'bg-info':'bg-transparent'} size-2 rounded-full`}></div>
                 {notif.type === 'like' &&
                   <RiBearSmileFill className="text-2xl text-[#e91c51]" />
@@ -172,24 +169,24 @@ const NotificationsPage = () => {
                 }
               </div>
               <img 
-                  className="size-10 object-cover rounded-md" 
+                  className="size-9 object-cover rounded-md" 
                   src={notif.from.profileImg? notif.from.profileImg: avatar} 
               />
               <div className="self-start flex-1">
                 <p className="font-bold text-sm md:text-md">@{notif.from.userName}</p>
-                <p className={`text-sm ${!notif.read? 'font-bold': ''}`}>
+                <p className={`text-xs ${!notif.read? 'font-bold': ''}`}>
                   {notif.type === 'like' && 'ask to bond!'}
                   {notif.type === 'comment' && 'replied to your post'}
                 </p>
               </div>
               <div className="flex gap-1 items-center">
                 <button 
-                  className="btn btn-xs btn-neutral rounded-md text-base-100"
+                  className=""
                   onClick={(ev) => {
                     ev.stopPropagation();
                     unreadNotif(notif._id);
                   }}
-                >Unread</button>
+                ><MdOutlineMarkEmailUnread className="text-2xl text-bold text-info" /></button>
                 <button
                   className={`text-neutral text-xl p-2 ${!deleteNotif && 'md:hover:bg-red-200'} rounded-full z-50`}
                   onClick={(ev) => {

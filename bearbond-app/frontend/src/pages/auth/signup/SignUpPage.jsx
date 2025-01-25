@@ -8,7 +8,7 @@ import Form from "./Form";
 function SignUpPage() {
 
   return (
-    <main className="h-full w-full flex justify-center">
+    <main className="h-screen bg-base-100 w-full flex justify-center">
       <section className="flex-col">
         <div className="flex items-center py-6 mt-12">
           <RiBearSmileFill className="text-6xl text-[#e91c51]" />

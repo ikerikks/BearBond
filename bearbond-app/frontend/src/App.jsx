@@ -44,7 +44,7 @@ function App() {
 	}
 
 	return (
-		<div className="flex md:max-w-[90%] mx-auto overflow-hidden">
+		<div className="flex md:max-w-[80%] mx-auto">
 			{authUser && <Sidebar />}
 			<Routes>
 				<Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to="/login" />} />

@@ -9,7 +9,7 @@ const RightPanel = () => {
 
 	return (
 		<aside className="hidden lg:block pt-2 p-2">
-			<div className="bg-white py-6 px-8 rounded-sm sticky top-0 border border-gray-200">
+			<div className="bg-white py-6 px-8 rounded-2xl sticky top-0 border border-gray-200 rounded-2xl">
 				<p className="font-bold mb-3">Meet new people</p>
 				<div className="flex flex-col gap-5">
 					{/* item */}

@@ -5,9 +5,9 @@ import axios from "axios";
 
 import { RiBearSmileFill } from "react-icons/ri";
 import { 
-	TbMessage2, TbMessage2Filled, 
-	TbBell, TbBellFilled,
-	TbUser, TbUserFilled,
+	TbMessages,
+	TbBell,
+	TbUserCircle,
 	TbSmartHome 
 } from "react-icons/tb";
 import { PiDotsThreeCircle, PiDotsThreeCircleFill } from "react-icons/pi";
@@ -23,7 +23,8 @@ const Sidebar = () => {
 
 	const queryClient = useQueryClient();
 	const { data: authUser } = useQuery({ queryKey: ['authUser'] });
-
+	const { data: notifs } = useQuery({ queryKey: ['notifications'] });
+	
 	const { mutate: logout, isError, isPending, error } = useMutation({
 		mutationFn: async () => {
 			try {
@@ -51,81 +52,90 @@ const Sidebar = () => {
 	const { pathname } = useLocation();
 
 	return (
-		<aside className="text-neutral font-semibold" >
+		<aside className="text-neutral font-semibold border-l bg-base-100">
 			<div className="md:w-52 w-14 h-screen sticky top-0 left-0 flex flex-col justify-between 
 			items-center md:items-start">
 				<ul className="mt-2 w-full">
 					<li className="px-[9px] mb-3">
 						<RiBearSmileFill className="text-4xl text-[#e91c51]" />
 					</li>
-					<li className="flex items-center md:hover:bg-base-300">
+					<li className="flex items-center md:hover:bg-[#e91c51]/5">
 						<NavLink
 							to="/home"
 							className={({ isActive }) => `flex flex-1 items-center gap-2 justify-center md:justify-start 
 							${isActive && 'font-extrabold'}`}
 						>
-							<div className={`hidden md:block h-6 w-[5px] rounded-sm
+							<div className={`hidden md:block h-6 w-[3px] rounded-full
 							${pathname.includes('home') && 'bg-primary opacity-80'}`}>
 							</div>
 							<div className="flex gap-2 py-2 items-center">
-								{pathname.includes('home')
-									? <TbSmartHome className="size-7 fill-[#000]" />
-									: <TbSmartHome className="size-7" />
-								}
+								<TbSmartHome className={
+									`size-6 
+									${pathname.includes('home')
+									&& 'text-primary'}`
+								} />
 								<p className="text-sm hidden md:block">Home</p>
 							</div>
 						</NavLink>
 					</li>
-					<li className="flex  items-center md:hover:bg-base-300">
+					<li className="flex  items-center md:hover:bg-[#e91c51]/5">
 						<NavLink
 							to="/notifications"
 							className={({ isActive }) => `flex flex-1 items-center gap-2 justify-center md:justify-start 
 							${isActive && 'font-extrabold'}`}
 						>
-							<div className={`hidden md:block h-6 w-[5px] rounded-sm
+							<div className={`hidden md:block h-6 w-[3px] rounded-full
 							${pathname.includes('notifications') && 'bg-primary opacity-80'}`}>
 							</div>
 							<div className="flex gap-2 py-2 items-center">
-								{pathname.includes('notifications')
-									? <TbBellFilled className="size-7" />
-									: <TbBell className="size-7" />
-								}
+								<TbBell className={
+									`size-6 
+									${pathname.includes('notifications')
+									&& 'text-primary'}`
+								} />
 								<p className="text-sm hidden md:block">Notifications</p>
 							</div>
+							{notifs && notifs.filter((notif) => notif.read === false).length > 0 && (
+								<div className="badge badge-primary text-base-100 font-normal">
+									{notifs.filter((notif) => notif.read === false).length}
+								</div>)
+							}
 						</NavLink>
 					</li>
-					<li className="flex items-center md:hover:bg-base-300">
+					<li className="flex items-center md:hover:bg-[#e91c51]/5">
 						<NavLink
 							to="/discussions"
 							className={({ isActive }) => `flex flex-1 items-center gap-2 justify-center md:justify-start 
 							${isActive && 'font-extrabold'}`}
 						>
-							<div className={`hidden md:block h-6 w-[5px] rounded-sm
+							<div className={`hidden md:block h-6 w-[3px] rounded-sm
 							${pathname.includes('discussions') && 'bg-primary opacity-80'}`}>
 							</div>
 							<div className="flex gap-2 py-2 items-center">
-								{pathname.includes('discussions')
-									? <TbMessage2Filled className="size-7" />
-									: <TbMessage2 className="size-7" />
-								}
+								<TbMessages className={
+									`size-6 
+									${pathname.includes('discussions')
+									&& 'text-primary'}`
+								}/>
 								<p className="text-sm hidden md:block">Discussions</p>
 							</div>
 						</NavLink>
 					</li>
-					<li className="flex items-center md:hover:bg-base-300">
+					<li className="flex items-center md:hover:bg-[#e91c51]/5">
 						<NavLink
 							to={`/profile/${authUser.userName}`}
 							className={({ isActive }) => `flex flex-1 items-center gap-2 justify-center md:justify-start 
 							${isActive && 'font-extrabold'}`}
 						>
-							<div className={`hidden md:block h-6 w-[5px] rounded-sm
+							<div className={`hidden md:block h-6 w-[3px] rounded-sm
 							${pathname.includes(`/profile/${authUser.userName}`) && 'bg-primary opacity-80'}`}>
 							</div>
 							<div className="flex gap-2 py-2 items-center">
-								{pathname.includes(`/profile/${authUser.userName}`)
-									? <TbUserFilled className="size-7" />
-									: <TbUser className="size-7" />
-								}
+								<TbUserCircle className={
+									`size-6 
+									${pathname.includes(`/profile/${authUser.userName}`)
+										&& 'text-primary'}`
+								}/>
 								<p className="text-sm hidden md:block">Profile</p>
 							</div>
 						</NavLink>
@@ -154,7 +164,7 @@ const Sidebar = () => {
 							onClick={() => { }}
 						>
 							<div className="avatar hidden md:inline-flex">
-								<div className="w-8 rounded-md">
+								<div className="size-10 rounded-md">
 									<img src={authUser?.profileImg || avatar} />
 								</div>
 							</div>

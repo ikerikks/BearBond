@@ -64,6 +64,7 @@ const CreatePost = () => {
 		onSuccess: () => {
 			setSrc(null);
 			inputRef.current.value = null;
+			inputRef.current.style.height = 'auto';
 			fileRef.current.value = null;
 			queryClient.invalidateQueries({ queryKey: ['posts'] });
 			toast('Post created', {
@@ -87,16 +88,16 @@ const CreatePost = () => {
 	const handleSubmit = (ev) => {
 		ev.preventDefault();
 		createPost({
-			text: inputRef.current.value,
+			text: inputRef.current.value.replace(/\n+$/, ''),
 			file: {
 				type: fileType,
-				src
+				src: src || ''
 			}
 		});
 	};
 
 	return (
-		<div className="flex p-3 items-start gap-2 border-b">
+		<div className="flex p-3 mt-5 items-start gap-2 bg-base-100 rounded-2xl">
 			<div className="hidden md:block avatar">
 				<div className="size-10 rounded-md">
 					<img src={authUser.profileImg || avatar} />
@@ -104,7 +105,7 @@ const CreatePost = () => {
 			</div>
 			<form className="flex flex-col gap-2 w-full" onSubmit={handleSubmit}>
 				<textarea
-					className="textarea w-full p-0 text-lg resize-none rounded-none border-none focus:outline-none border-gray-800"
+					className="textarea w-full p-0 text-md resize-none rounded-none border-none focus:outline-none border-gray-800"
 					placeholder="What's your wish..."
 					ref={inputRef}
 					onInput={handleInput}
@@ -112,20 +113,29 @@ const CreatePost = () => {
 				{src && (
 					<div className="relative size-auto md:w-56 md:px-4 border border-gray-300">
 						<HiMinusCircle
-							className="absolute -top-4 -right-3 size-8 text-neutral cursor-pointer z-30"
+							className="absolute -top-4 -right-3 size-8 text-[#E91C51] cursor-pointer z-30"
 							onClick={() => {
 								setSrc(null);
 								fileRef.current.value = null;
+								setFileType(null);
 							}}
 						/>
-						{fileType === 'image'
-							? <img src={src} className="w-full mx-auto h-72 object-contain rounded" />
-							: <video controls src={src} className="w-full mx-auto h-72 object-contain rounded"></video>
+						{fileType === 'image' &&
+							<img src={src} 
+								className="w-full mx-auto h-72 object-contain rounded" 
+							/>
+						}
+						{fileType === 'video' && 
+							<video
+								controls 
+								src={src} 
+								className="w-full mx-auto h-72 object-contain rounded"
+							></video>
 						}
 					</div>
 				)}
 				<div className="flex justify-between">
-					<div className="flex gap-1 items-center text-info">
+					<div className="flex gap-2 items-center text-info">
 						<EmojiPicker inputRef={inputRef} />
 						<TbPhotoVideo
 							className="size-5 cursor-pointer text-primary"

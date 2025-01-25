@@ -1,27 +1,41 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 import Post from "./Post";
-import PostLoader from "../loaders/PostLoader.jsx";
+import PostLoader from "../loaders/PostLoader";
 
-const Posts = () => {
+const Posts = ({ feedType, userId }) => {
 
-	const queryClient = useQueryClient();
+	const getUrl = () => {
+		switch (feedType) {
+			case 'forYou':
+				return '/api/posts/all';
+			case 'profile':
+				return `/api/posts/user/${userId}`;
+			case 'likes':
+				return `/api/posts/likes/${userId}`;
+			default:
+				return '/api/posts/all';
+		}
+	}
+
+	const postUrl = getUrl();
 
 	const { isLoading, error, data: posts } = useQuery({
 		queryKey: ['posts'],
 		queryFn: async () => {
 			try {
-				const res = await axios.get('/api/posts/all');
+				const res = await axios.get(postUrl);
 				const { data } = res;
-				
+
 				if (data.error) { throw data.error }
 				return data;
 			} catch (err) {
-				if (err.response) {return null}
+				if (err.response) { return null }
 				throw err;
 			}
 		},
+		retry: false
 	})
 
 
@@ -30,22 +44,19 @@ const Posts = () => {
 			{isLoading && (
 				<div className="flex flex-col justify-center">
 					<PostLoader />
-					<PostLoader />
-					<PostLoader />
 				</div>
 			)}
-			{!isLoading && posts?.length === 0 &&
-				<div className="flex flex-1 justify-center mt-8">
-					<p className="badge border-2 border-info py-3">No posts</p>
-				</div>
-			}
+			{!isLoading && posts?.length === 0 && (
+				<p className="text-center text-secondary font-bold">No posts here</p>
+			)}
 			{!isLoading && posts.length > 0 && (
-				<>
+				<div className="flex flex-col w-full pb-10">
 					{posts.map((post) => (
 						<Post key={post._id} post={post} />
 					))}
-				</>
+				</div>
 			)}
+
 		</>
 	);
 };

@@ -1,7 +1,7 @@
 const ProfileLoader = () => {
 	
   return (
-		<div className='flex flex-col gap-2 w-full my-2 p-4'>
+		<div className='flex flex-col gap-2 w-full my-2 p-4 bg-base-100 rounded-2xl'>
 			<div className='flex gap-2 items-center'>
 				<div className='flex flex-1 gap-1'>
 					<div className='flex flex-col gap-1 w-full'>

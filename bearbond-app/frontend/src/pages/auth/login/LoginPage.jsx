@@ -7,7 +7,7 @@ import Form from "./Form";
 function LoginPage() {
 
   return (
-    <main className="flex h-full w-full justify-center bg-base-100">
+    <main className="flex h-screen w-full justify-center bg-base-100">
       <section className="flex-col">
         <div className="flex items-center py-6 mt-12">
           <RiBearSmileFill className="text-6xl text-[#e91c51]" />

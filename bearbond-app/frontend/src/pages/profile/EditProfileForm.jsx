@@ -1,12 +1,13 @@
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 
 import { BsFillPatchCheckFill } from "react-icons/bs";
 
 const EditProfileForm = () => {
-
+	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 	const {data:authUser} = useQuery({ queryKey: ['authUser'] });
 
@@ -24,7 +25,7 @@ const EditProfileForm = () => {
 				}
 			}
 		},
-		onSuccess: () => {
+		onSuccess: (data) => {
 			toast('profile updated', {
 				icon: <BsFillPatchCheckFill className="text-xl" />,
 				style: {
@@ -33,6 +34,7 @@ const EditProfileForm = () => {
 					fontSize: '14px'
 				}
 			});
+			navigate(`/profile/${data.userName}`)
 			queryClient.invalidateQueries({queryKey:['userProfile']});
 		}
 	})
