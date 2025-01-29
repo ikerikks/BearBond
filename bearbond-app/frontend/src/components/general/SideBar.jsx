@@ -5,10 +5,9 @@ import axios from "axios";
 
 import { RiBearSmileFill } from "react-icons/ri";
 import { 
-	TbMessages,
-	TbBell,
-	TbUserCircle,
-	TbSmartHome 
+	TbMessages, TbBell,
+	TbUserCircle, TbSmartHome,
+	TbDotsCircleHorizontal  
 } from "react-icons/tb";
 import { PiDotsThreeCircle, PiDotsThreeCircleFill } from "react-icons/pi";
 import { BsThreeDots } from "react-icons/bs";
@@ -140,21 +139,6 @@ const Sidebar = () => {
 							</div>
 						</NavLink>
 					</li>
-					
-					{/* <li className="flex items-center md:w-full md:gap-3">
-						<NavLink
-							// to={'/more'}
-							className={({ isActive }) =>
-								isActive
-									? "flex gap-2 items-center max-w-fit font-extrabold cursor-pointer"
-									: "flex gap-2 items-center max-w-fit cursor-pointer"
-							}
-							onClick={()=> {}}
-						>
-							<PiDotsThreeCircle className="size-7" />
-							<p className="text-sm hidden md:block">More</p>
-						</NavLink>
-					</li> */}
 				</ul>
 				{authUser && (
 					<div className="mb-10 w-full md:px-4 flex md:gap-2 items-center justify-center md:justify-between">

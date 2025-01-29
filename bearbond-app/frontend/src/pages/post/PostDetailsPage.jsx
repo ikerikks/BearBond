@@ -5,7 +5,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 
-import { TbSend, TbArrowLeftToArc, TbTrash, TbMessages } from "react-icons/tb";
+import { TbSend, TbArrowLeftToArc, TbTrash, TbMessageDots } from "react-icons/tb";
 import { RiBearSmileFill } from "react-icons/ri";
 import { BsFillPatchCheckFill } from "react-icons/bs";
 
@@ -29,10 +29,10 @@ const PostDetailsPage = () => {
       try {
         const res = await axios.get(`/api/posts/status/${postId}`);
         const { data } = res;
-        const comments = data.user._id === authUser._id
-          ? data.comments
-          : data.comments.filter((comment) => comment.user._id === authUser._id)
-        data.myComments = comments;
+        // const comments = data.user._id === authUser._id
+        //   ? data.comments
+        //   : data.comments.filter((comment) => comment.user._id === authUser._id)
+        // data.myComments = comments;
 
         return data;
       } catch (err) {
@@ -272,16 +272,12 @@ const PostDetailsPage = () => {
                 <RiBearSmileFill className="text-lg" />
                 {post.likes.length}
               </div>
-              {(!(post.user._id === authUser._id) &&
-                post.comments.length > post.myComments.length) && (
-                  <p className=" text-xs font-bold text-primary">
-                    Only @{post.user.userName} can access all replies
-                  </p>
-                )}
+              {/* <p className=" text-xs font-bold text-primary">
+                All the replies
+              </p> */}
             </div>
-            {/* comments */}
             <div className="flex flex-col">
-              {post.myComments && post.myComments.map((comment) => (
+              {post.comments && post.comments.map((comment) => (
                 <div key={comment._id} className="flex flex-col gap-2 px-3 py-4 items-start border-b">
                   {/* post user info */}
                   <div className="flex w-full gap-2">
@@ -319,11 +315,11 @@ const PostDetailsPage = () => {
                   {/* chat access if auth */}
                   {!(comment.user._id === authUser._id) &&
                     (<button
-                      className="flex items-center gap-1 text-primary text-sm font-bold cursor-pointer rounded-full md:hover:bg-primary/10"
+                      className="flex gap-1 items-center text-primary text-sm font-bold cursor-pointer rounded-full md:hover:bg-primary/10"
                       onClick={() => {handleChat(comment.user._id)}}
                     >
                       chat
-                      <TbMessages className="text-lg" />
+                      <TbMessageDots className="text-lg" />
                     </button>)
                   }
                 </div>

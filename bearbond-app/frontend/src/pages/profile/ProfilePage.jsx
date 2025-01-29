@@ -1,14 +1,14 @@
 import { useRef, useState, useEffect } from "react";
+import { io } from "socket.io-client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, useLocation, useNavigate, useNavigation, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
 
-import { FaArrowLeft } from "react-icons/fa6";
 import { IoCalendarOutline } from "react-icons/io5";
 import { FiUpload } from "react-icons/fi";
 import { BsFillPatchCheckFill } from "react-icons/bs";
-import { TbPhotoEdit, TbArrowLeftToArc } from "react-icons/tb";
+import { TbPhotoEdit, TbArrowLeftToArc, TbMessageDots } from "react-icons/tb";
 
 import ProfileLoader from "../../components/loaders/ProfileLoader";
 import Posts from "../../components/general/Posts";
@@ -67,6 +67,33 @@ const ProfilePage = () => {
       });
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
       setProfileImg(null);
+    }
+  })
+
+  const { mutate: deleteAccount, isPending:deleting } = useMutation({
+    mutationFn: async () => {
+      try {
+        const res = await axios.post('/api/users/delete');
+        const { data } = res;
+        return data;
+      } catch (err) {
+        if (err.response) {
+          throw err.response.data.error;
+        } else {
+          throw err.message;
+        }
+      }
+    },
+    onSuccess: (data) => {
+      toast(data.message, {
+        icon: <BsFillPatchCheckFill className="text-xl" />,
+        style: {
+          backgroundColor: '#E91C51',
+          color: '#fff',
+          fontSize: '14px'
+        }
+      });
+      // queryClient.invalidateQueries({ queryKey: ['userProfile'] });
     }
   })
 
@@ -209,6 +236,15 @@ const ProfilePage = () => {
             {feedType === 'likes' && userProfile && (
               <Posts feedType={'likes'} userId={userProfile._id} />
             )}
+          </div>
+          <div className="flex justify-center my-8">
+            <button 
+              className="btn text-error btn-sm"
+              onClick={()=>{deleteAccount()}}
+            >
+              {deleting && '•••'}
+              {!deleting && 'Delete your account'}
+            </button>
           </div>
         </>
       )}

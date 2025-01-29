@@ -1,12 +1,17 @@
+import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 
 import { FaRegUserCircle } from "react-icons/fa";
-import { TbLockPassword } from "react-icons/tb";
+import { TbLockPassword, TbEye, TbEyeClosed } from "react-icons/tb";
 import { MdAlternateEmail } from "react-icons/md";
 
 function Form() {
+
+  const [visible, setVisible] = useState(false);
+  const navigate = useNavigate();
 
   const { mutate: signup, isError, isPending, error } = useMutation({
     mutationFn: async (formData) => {
@@ -25,7 +30,10 @@ function Form() {
         }
       }
     },
-    onSuccess: () => {toast.success('account created')}
+    onSuccess: () => {
+      toast.success('account created');
+      navigate('/login');
+    }
   })
 
   const handleSubmit = (ev) => {
@@ -36,19 +44,31 @@ function Form() {
 
   return (
     <form onSubmit={handleSubmit}>
+      <p className="text-primary h-4 font-bold">*</p>
       <label className="input input-bordered rounded-none my-1.5 flex items-center gap-2 bg-accent">
-        <MdAlternateEmail />
-        <input type="text" className="grow text-xs" placeholder="Email" name="email" />
+        <MdAlternateEmail className="text-info" />
+        <input type="email" required className="grow text-xs" placeholder="Email" name="email" />
       </label>
+      <p className="text-primary h-4 font-bold">*</p>
       <label className="input input-bordered rounded-none my-1.5 flex items-center gap-2 bg-accent">
-        <TbLockPassword />
-        <input type="password" className="grow text-xs" placeholder="Password" name="password" />
+        <TbLockPassword className="text-info" />
+        <input type={visible ? 'text' : 'password'} className="grow text-xs" placeholder="Password" name="password" />
+        <button onClick={(ev)=>{
+          ev.preventDefault();
+          setVisible(!visible);
+        }}>
+          {visible 
+            ? <TbEyeClosed className="text-xl text-info" />
+            : <TbEye className="text-xl text-info" />
+          }
+        </button>
       </label>
       <label className="input input-bordered rounded-none my-1.5 flex items-center gap-2 bg-accent">
         <input type="text" className="grow text-xs" placeholder="Full Name" name="fullName" />
       </label>
+      <p className="text-primary h-4 font-bold">*</p>
       <label className="input input-bordered rounded-none my-1.5 flex items-center gap-2 bg-accent">
-        <FaRegUserCircle />
+        <FaRegUserCircle className="text-info" />
         <input type="text" className="grow text-xs" placeholder="Username" name="userName" />
       </label>
       <button type="submit" className="btn btn-sm btn-wide my-4 btn-neutral text-base-100">

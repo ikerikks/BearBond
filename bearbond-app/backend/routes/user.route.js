@@ -1,7 +1,9 @@
 import express from 'express';
 import multer from 'multer';
 
-import { getUserProfile, getSuggestedUsers, updateUserProfile } from '../controllers/user.controller.js';
+import { getUserProfile, getSuggestedUsers, 
+  updateUserProfile, deleteAccount 
+} from '../controllers/user.controller.js';
 import protectRoute from '../middleware/protectRoute.js';
 
 const router = express.Router();
@@ -12,5 +14,6 @@ router.use(upload.none());
 router.get('/profile/:username', protectRoute, getUserProfile);
 router.get('/suggested', protectRoute, getSuggestedUsers);
 router.post('/update', protectRoute, updateUserProfile);
+router.delete('/delete', protectRoute, deleteAccount);
 
 export default router;

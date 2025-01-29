@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { v2 as cloudinary } from 'cloudinary';
+import jwt from 'jsonwebtoken';
 
 import User from '../models/user.model.js';
 
@@ -147,4 +148,30 @@ const updateUserProfile = async (req, res) => {
 
 }
 
-export { getUserProfile, getSuggestedUsers, updateUserProfile };
+const deleteAccount = async (req, res) => {
+
+  try {
+    // Get the  token from the Authorization header
+    // const token = req.headers.authorization.split(' ')[1];
+    const token = req.headers.authorization ? req.headers.authorization.split(' ')[1] : null;
+    console.log('TOKEN:: ', token)
+    if (!token) {
+      return res.status(401).json({ message: 'No token provided' });
+    }
+    // Verify/decode the token to extract user information
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.userId;
+
+    const user = await User.findByIdAndDelete(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    return res.status(200).json({ message: 'Account deleted' });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export { getUserProfile, getSuggestedUsers, updateUserProfile, deleteAccount };
